@@ -333,7 +333,7 @@ function Home() {
       <aside className={`mail-sidebar ${isNavOpen ? "is-open" : ""}`}>
         <div className="brand-lockup">
           <div className="brand-symbol-wrap">
-            <img src="/manus-storage/nocturne-mark_9bc29b24.png" alt="" className="brand-symbol" />
+            <img src="/nocturne-mark.svg" alt="" className="brand-symbol" />
           </div>
           <div>
             <p className="brand-name">NOCTURNE</p>
