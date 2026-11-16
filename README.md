@@ -2,12 +2,12 @@
 
 # Nocturne Mail
 
-> **A premium webmail UI prototype in the Neo Kinpaku style**  
+> **A calm, responsive webmail UI prototype with the Nocturne Flow design system**
 > This is not a production mail service connected to a real mail server. It is a frontend project for designing and validating the layout and interactions of a mail client.
 
 `open_web_mail` is a webmail-interface prototype that keeps the familiar information architecture of ordinary webmail while exploring a visual experience that differs from Gmail and Outlook.
 
-Inside the project, the product is called **Nocturne Mail**. Its design direction is **Neo Kinpaku**, combining the thin, irregular lines of Japanese gold-leaf craft, deep dark surfaces reminiscent of urushi lacquer, and turquoise patina signals with a modern mail-client UI.
+Inside the project, the product is called **Nocturne Mail**. Its **Nocturne Flow** design system pairs a warm light canvas, pine-green accents, consistent typography, and restrained motion with a practical split-view mail workflow.
 
 The current implementation is at the UI/UX prototype stage. Inbox, starred mail, archive, search, message reading, and compose interactions are designed to feel like a real service. The messages displayed on screen are mock data, however, and the project is not connected to a real IMAP, SMTP, or JMAP server.
 
@@ -28,7 +28,7 @@ The current codebase is visualized as an **isometric 3D architecture diagram** s
 - **SERVER** — Node.js + Express server for serving production static files
 - **FUTURE MAIL** — JMAP / IMAP / SMTP / authentication areas that are not connected yet
 
-The core of the current structure is `client/src/pages/Home.tsx`, where the main UI state for the message list, reading view, compose interface, search/filtering, starred state, and related interactions is implemented.
+The core of the current structure is `client/src/pages/FlowHome.tsx`, with design tokens and responsive styles in `client/src/pages/flow.css`.
 
 <details>
 <summary><strong>View the directory structure as text</strong></summary>
@@ -44,12 +44,12 @@ open_web_mail/
 │     ├─ hooks/            # Custom hooks
 │     ├─ lib/              # Utilities / shared logic
 │     ├─ pages/
-│     │  ├─ Home.tsx       # Main Nocturne Mail screen
+│     │  ├─ FlowHome.tsx   # Main Nocturne Mail screen
+│     │  ├─ flow.css       # Nocturne Flow styles and motion
 │     │  └─ NotFound.tsx   # 404 screen
 │     ├─ App.tsx           # Application root
 │     ├─ main.tsx          # React entry point
 │     ├─ const.ts          # Shared constants
-│     └─ index.css         # Main styles
 │
 ├─ server/
 │  └─ index.ts             # Express server for production static files
@@ -101,15 +101,11 @@ open_web_mail/
 
 ### Design Characteristics
 
-- Asymmetric three-column desktop layout
-- Left mail navigation
-- Center mail workspace
-- Right context panel
-- Gold accents inspired by gold leaf
-- Warm black-brown lacquer background
-- Turquoise patina accents for unread/status signals
-- Small monospace status labels
-- Short, restrained UI animation
+- Calm light surfaces and a single pine-green accent
+- Left folder navigation, message list, and flexible reading pane
+- Consistent icon geometry, typography, radius, and spacing tokens
+- Subtle message transitions, animated list changes, and compose sheet
+- Reduced-motion support and keyboard shortcuts (`/`, `Ctrl/⌘ K`, `C`)
 - Tablet/mobile responsive layouts
 
 ---
@@ -131,7 +127,7 @@ The following features are not connected yet:
 - Persistent read/unread state
 - Persistent star/archive/delete state
 
-The interface currently uses mock mail data defined inside `Home.tsx`.
+The interface currently uses mock mail data defined inside `FlowHome.tsx`. Compose submissions are stored in the current demo session's Sent folder only; no email is transmitted.
 
 So the most accurate description of this repository is a **webmail design prototype / frontend foundation for a real webmail client**.
 
@@ -298,7 +294,7 @@ This provides a simple preview of the Vite production build.
 The center of the current project is:
 
 ```text
-client/src/pages/Home.tsx
+client/src/pages/FlowHome.tsx
 ```
 
 This file contains the mock message data, inbox state, selected-message state, search/filter UI, compose interface, and other core Nocturne Mail screen logic.
@@ -306,16 +302,15 @@ This file contains the mock message data, inbox state, selected-message state, s
 Mock messages use a structure similar to:
 
 ```ts
-type MailItem = {
+type Message = {
   id: number;
   sender: string;
-  initials: string;
+  address: string;
   subject: string;
   preview: string;
   time: string;
   date: string;
   label: string;
-  tone: "gold" | "patina" | "paper" | "graphite";
   unread?: boolean;
   starred?: boolean;
   attachment?: boolean;
@@ -329,29 +324,29 @@ When a real mail server is connected, this mock data can be replaced by server r
 
 ## Design Concept
 
-The detailed design intent is documented in [`ideas.md`](./ideas.md).
+The current design specification is documented in [`docs/nocturne-flow.md`](./docs/nocturne-flow.md). Earlier concept exploration is preserved in [`ideas.md`](./ideas.md).
 
-### Neo Kinpaku
+### Nocturne Flow
 
-This is the central visual direction of Nocturne Mail.
+This is the current visual direction of Nocturne Mail.
 
-The goal is to combine the material feeling of Japanese gold-leaf craft with a modern information interface, creating a mail environment that feels more tactile and focused than a generic SaaS dashboard.
+The goal is to create a readable and distinct webmail workspace that feels coherent across desktop and mobile without relying on decorative effects.
 
 ### Core Principles
 
-#### 1. Decoration becomes structure
+#### 1. Content stays in focus
 
-Gold lines, small labels, and status signals are used as information architecture that guides attention, not merely as ornament.
+The message list and reading pane have a clear hierarchy, with secondary controls kept visually quiet.
 
-#### 2. Black is not treated as a flat black
+#### 2. A single visual language
 
-Instead of filling the whole page with a flat `#000000`, several warm black-brown and graphite layers create depth.
+Warm-neutral backgrounds, pine-green highlights, unified icon weight, and consistent spacing define the interface.
 
-#### 3. High information density and whitespace coexist
+#### 3. Density and whitespace coexist
 
 The message list remains dense enough to scan quickly, while search, titles, and reading areas retain generous whitespace.
 
-#### 4. Interactions stay quiet and fast
+#### 4. Motion explains state
 
 State changes are communicated through short movement and color changes rather than excessive glow, bounce, or large animation.
 
@@ -363,18 +358,18 @@ State changes are communicated through short movement and color changes rather t
 
 ```text
 ┌──────────────┬────────────────────────────┬──────────────────┐
-│ Navigation   │ Mail workspace             │ Context rail     │
+│ Navigation   │ Message list               │ Reading pane     │
 │              │                            │                  │
-│ Inbox        │ Mail list / message        │ Status / details │
-│ Starred      │                            │                  │
+│ Inbox        │ Search / filters           │ Selected mail    │
+│ Starred      │ Sender / subject / preview │ Reply / archive  │
 │ Sent         │                            │                  │
 └──────────────┴────────────────────────────┴──────────────────┘
 ```
 
 ### Tablet
 
-- Collapse or hide the right context area
-- Focus on a two-column navigation + reading layout
+- Navigation becomes an accessible drawer
+- Message list and reading pane share the available width
 
 ### Mobile
 

@@ -2,12 +2,12 @@
 
 # Nocturne Mail
 
-> **Neo Kinpaku 스타일의 고급 웹메일 UI 프로토타입**  
+> **Nocturne Flow 디자인 시스템을 적용한 웹메일 UI 프로토타입**
 > 실제 메일 서버에 연결된 완성형 서비스가 아니라, 메일 클라이언트의 화면 구성과 인터랙션을 설계·검증하기 위한 프론트엔드 프로젝트입니다.
 
 `open_web_mail`은 일반적인 웹메일의 정보 구조를 유지하면서도 Gmail·Outlook과는 다른 시각적 경험을 실험하기 위해 만든 웹메일 인터페이스 프로토타입입니다.
 
-프로젝트 내부에서는 이 제품을 **Nocturne Mail**이라고 부릅니다. 디자인 방향은 **Neo Kinpaku**로, 일본식 금박의 얇고 불규칙한 선과 우루시 래커처럼 깊은 어두운 표면, 청록색 파티나 신호를 현대적인 메일 클라이언트 UI와 결합하는 것을 목표로 합니다.
+프로젝트 내부에서는 이 제품을 **Nocturne Mail**이라고 부릅니다. **Nocturne Flow** 디자인 시스템은 밝은 웜그레이 배경과 차분한 그린 포인트, 일관된 타이포그래피와 절제된 모션을 기반으로 합니다.
 
 현재 구현은 UI/UX 프로토타입 단계이며 받은편지함, 별표, 보관, 검색, 메일 읽기, 작성창 등의 동작을 실제 서비스처럼 체험할 수 있도록 구성되어 있습니다. 다만 화면에 표시되는 메일은 목업 데이터이며 IMAP, SMTP, JMAP 등의 실제 메일 서버와 연결되어 있지는 않습니다.
 
@@ -28,7 +28,7 @@ README에서 프로젝트 구조를 바로 파악할 수 있도록 현재 코드
 - **SERVER** — Node.js + Express 기반의 프로덕션 정적 파일 제공 서버
 - **FUTURE MAIL** — 아직 연결되지 않은 JMAP / IMAP / SMTP / 인증 영역
 
-현재 구조에서 핵심은 `client/src/pages/Home.tsx`이며 메일 목록, 메일 읽기, 작성 인터페이스, 검색/필터, 별표 등 주요 UI 상태가 이곳에 구성되어 있습니다.
+현재 구조에서 핵심은 `client/src/pages/FlowHome.tsx`이며, 스타일과 반응형·모션 규칙은 `client/src/pages/flow.css`에 구성되어 있습니다.
 
 <details>
 <summary><strong>텍스트 형태의 디렉터리 구조도 보기</strong></summary>
@@ -44,12 +44,12 @@ open_web_mail/
 │     ├─ hooks/            # 커스텀 Hooks
 │     ├─ lib/              # 유틸리티 / 공통 로직
 │     ├─ pages/
-│     │  ├─ Home.tsx       # 메인 Nocturne Mail 화면
+│     │  ├─ FlowHome.tsx   # 메인 Nocturne Mail 화면
+│     │  ├─ flow.css       # Nocturne Flow 스타일과 모션
 │     │  └─ NotFound.tsx   # 404 화면
 │     ├─ App.tsx           # 애플리케이션 루트
 │     ├─ main.tsx          # React 엔트리 포인트
 │     ├─ const.ts          # 공통 상수
-│     └─ index.css         # 메인 스타일
 │
 ├─ server/
 │  └─ index.ts             # 프로덕션 정적 파일 제공용 Express 서버
@@ -101,15 +101,11 @@ open_web_mail/
 
 ### 디자인 특징
 
-- 비대칭 3열 데스크톱 레이아웃
-- 왼쪽 메일 네비게이션
-- 중앙 메일 작업 영역
-- 오른쪽 컨텍스트 패널
-- 금박을 연상시키는 골드 포인트
-- 따뜻한 흑갈색 계열의 래커 배경
-- 읽지 않은 메일 및 상태 표시용 청록색 Patina 포인트
-- 작은 모노스페이스 상태 레이블
-- 짧고 절제된 UI 애니메이션
+- 밝은 표면과 한 가지 차분한 그린 강조색
+- 왼쪽 폴더 탐색, 메일 목록, 넓은 읽기 영역
+- 아이콘·타이포그래피·모서리·간격의 일관된 규칙
+- 메일 전환, 목록 변경, 작성 창의 절제된 모션
+- 움직임 줄이기 지원과 키보드 단축키(`/`, `Ctrl/⌘ K`, `C`)
 - 모바일/태블릿 대응 레이아웃
 
 ---
@@ -131,7 +127,7 @@ open_web_mail/
 - 실제 읽음/안읽음 상태 저장
 - 실제 별표/보관/삭제 상태 저장
 
-현재 `Home.tsx` 내부에 정의된 목업 메일 데이터를 사용해 화면과 인터랙션을 확인하는 구조입니다.
+현재 `FlowHome.tsx` 내부의 목업 메일 데이터를 사용합니다. 작성 창의 보내기 동작은 현재 데모 세션의 보낸편지함에만 저장하며 실제 이메일은 발송하지 않습니다.
 
 따라서 현재 저장소는 **웹메일 디자인 프로토타입 / 실제 웹메일 프론트엔드의 베이스**라고 보는 것이 가장 정확합니다.
 
@@ -298,7 +294,7 @@ pnpm preview
 현재 프로젝트의 중심은 다음 파일입니다.
 
 ```text
-client/src/pages/Home.tsx
+client/src/pages/FlowHome.tsx
 ```
 
 이 파일에서 메일 목록용 목업 데이터, 받은편지함 상태, 메일 선택 상태, 검색/필터 관련 UI, 작성 인터페이스 등 Nocturne Mail의 핵심 화면이 구성됩니다.
@@ -306,16 +302,15 @@ client/src/pages/Home.tsx
 목업 메일은 다음과 같은 형태의 데이터 구조를 사용합니다.
 
 ```ts
-type MailItem = {
+type Message = {
   id: number;
   sender: string;
-  initials: string;
+  address: string;
   subject: string;
   preview: string;
   time: string;
   date: string;
   label: string;
-  tone: "gold" | "patina" | "paper" | "graphite";
   unread?: boolean;
   starred?: boolean;
   attachment?: boolean;
@@ -329,23 +324,23 @@ type MailItem = {
 
 ## 디자인 컨셉
 
-자세한 디자인 의도는 [`ideas.md`](./ideas.md)에 정리되어 있습니다.
+현재 디자인 규칙은 [`docs/nocturne-flow.md`](./docs/nocturne-flow.md)에 정리되어 있습니다. 이전 콘셉트 탐색은 [`ideas.md`](./ideas.md)에 보존했습니다.
 
-### Neo Kinpaku
+### Nocturne Flow
 
 Nocturne Mail의 핵심 디자인 방향입니다.
 
-일본식 금박 공예의 질감과 현대적인 정보 인터페이스를 결합해 일반적인 SaaS 대시보드보다 조금 더 물성 있고 집중감 있는 메일 환경을 만드는 것이 목표입니다.
+장식보다 메일 목록과 본문의 가독성을 우선하고, 데스크톱과 모바일에서 같은 언어로 작동하는 웹메일 작업 공간을 목표로 합니다.
 
 ### 핵심 원칙
 
-#### 1. 장식은 구조가 된다
+#### 1. 콘텐츠에 집중한다
 
-골드 라인, 작은 레이블, 상태 신호를 단순 장식이 아니라 사용자의 시선을 안내하는 정보 구조로 사용합니다.
+메일 목록과 읽기 영역의 계층을 명확히 하고 부차적인 조작 요소는 시각적으로 차분하게 유지합니다.
 
-#### 2. 검은색을 단순한 검정으로 사용하지 않는다
+#### 2. 하나의 시각 언어를 유지한다
 
-페이지 전체를 `#000000` 같은 평면적인 검정으로 만드는 대신 따뜻한 흑갈색과 흑연색의 여러 단계를 사용해 깊이를 만듭니다.
+웜그레이 배경, 그린 포인트, 통일된 아이콘 굵기와 간격을 디자인 시스템으로 관리합니다.
 
 #### 3. 높은 정보 밀도와 여백을 동시에 사용한다
 
@@ -363,18 +358,18 @@ Nocturne Mail의 핵심 디자인 방향입니다.
 
 ```text
 ┌──────────────┬────────────────────────────┬──────────────────┐
-│ Navigation   │ Mail workspace             │ Context rail     │
+│ Navigation   │ Message list               │ Reading pane     │
 │              │                            │                  │
-│ Inbox        │ Mail list / message        │ Status / details │
-│ Starred      │                            │                  │
+│ Inbox        │ Search / filters           │ Selected mail    │
+│ Starred      │ Sender / subject / preview │ Reply / archive  │
 │ Sent         │                            │                  │
 └──────────────┴────────────────────────────┴──────────────────┘
 ```
 
 ### Tablet
 
-- 오른쪽 컨텍스트 영역 축소 또는 숨김
-- 메일 탐색과 읽기 영역 중심의 2열 구성
+- 폴더 탐색을 드로어로 전환
+- 메일 목록과 읽기 영역이 남은 너비를 활용
 
 ### Mobile
 

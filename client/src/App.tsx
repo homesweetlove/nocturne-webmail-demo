@@ -1,21 +1,21 @@
 /*
  * Nocturne Mail / App shell
- * Style reminder: Neo Kinpaku — dark lacquer surfaces, scarce kinpaku gold,
- * verdigris state cues, precise geometry, and quiet motion.
+ * Nocturne Flow — warm-light surfaces, consistent geometry,
+ * content-led hierarchy, and purposeful motion.
  */
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
+import FlowHome from "./pages/FlowHome";
 
 export default function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="dark">
+      <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster position="bottom-right" />
-          <Home />
+          <FlowHome />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
